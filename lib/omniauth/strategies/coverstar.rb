@@ -8,8 +8,8 @@ module OmniAuth
       option :name, "coverstar"
 
       option :client_options,
-        site:          "https://spotlight.auth.us-east-1.amazoncognito.com",
-        authorize_url: "/oauth2/authorize",
+        site:          "https://auth.coverstar.app",
+        authorize_url: "/login",
         token_url:     "/oauth2/token"
 
       option :scope, "openid email profile"
