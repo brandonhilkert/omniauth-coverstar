@@ -13,7 +13,6 @@ module OmniAuth
         token_url:     "/oauth2/token"
 
       option :scope, "openid email profile"
-      option :api_base_url, "https://api.spotlight.social/external-v1/"
 
       uid { decoded_id_token["sub"] }
 
