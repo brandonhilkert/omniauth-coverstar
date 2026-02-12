@@ -19,9 +19,8 @@ module OmniAuth
 
       info do
         {
-          email:       raw_info.dig("data", "email"),
-          name:        raw_info.dig("data", "preferredName"),
-          description: raw_info.dig("data", "description")
+          email: decoded_id_token["email"],
+          name:  decoded_id_token["cognito:username"]
         }
       end
 
@@ -35,11 +34,7 @@ module OmniAuth
       end
 
       extra do
-        { raw_info: raw_info }
-      end
-
-      def raw_info
-        @raw_info ||= fetch_profile
+        { raw_info: decoded_id_token }
       end
 
       private
@@ -51,22 +46,9 @@ module OmniAuth
           @decoded_id_token ||= begin
             id_token = access_token["id_token"]
             payload = id_token.split(".")[1]
-            # Add padding for Base64 decode
             padded = payload + "=" * ((4 - payload.length % 4) % 4)
             JSON.parse(Base64.urlsafe_decode64(padded))
           end
-        end
-
-        def fetch_profile
-          url = URI.join(options.api_base_url, "profile").to_s
-          id_token = access_token["id_token"]
-
-          response = Faraday.get(url) do |req|
-            req.headers["Authorization"] = "Bearer #{id_token}"
-            req.headers["Accept"] = "application/json"
-          end
-
-          JSON.parse(response.body)
         end
     end
   end
